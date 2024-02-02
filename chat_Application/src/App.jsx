@@ -11,7 +11,7 @@ function App() {
     <Container className='both-columns'>
        <Navbar bg="primary" data-bs-theme="dark" className='navbar'>
           <Navbar.Brand href="#home">Let's Chat</Navbar.Brand>
-          <Nav className="me-auto">
+          <Nav className="me-auto align-items-end">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#features">Contacts</Nav.Link>
             <Image src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?size=626&ext=jpg&ga=GA1.1.210930112.1699676705&semt=ais" alt="Avatar" className="avatar"/>

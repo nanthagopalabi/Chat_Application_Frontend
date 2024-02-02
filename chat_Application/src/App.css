@@ -1,12 +1,15 @@
-* {
+body {
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Prevent scrolling */
 }
+
 .sidebar{
   background-color: #445e80;
   height: 100vh;
   padding-top: 10px;
   flex-shrink: 0;
+  margin-top: 55px;
 }
 .rows{
   width: 100vw;
@@ -27,25 +30,26 @@ li{
   background: linear-gradient(to bottom left,#C0C0C0, #252b30);
   margin:0;
   padding: 10px;
-  /* width: calc(100% - 33.3321%); */
   display: flex;
   box-sizing: border-box;
 }
-
 .message{
   position: relative;
   padding: 8px;
   box-shadow: 0px -1px 5px rgba(0, 0, 0, 0.1);
   color: aliceblue;
-  width:100%
+  width:100%;
 }
-.navbar{
-  width: 100vw;
-  display: flex; 
-  padding-left: 10px;
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 .both-columns{
-  margin-left: 0px;
+  margin-left: 0px; 
+  column-width: auto;
 }
 .avatar {
   width: 40px;
