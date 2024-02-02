@@ -1,11 +1,13 @@
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Prevent scrolling */
+  overflow: hidden;
 }
 
 .sidebar{
-  background-color: #445e80;
+  background: url('https://images.pexels.com/photos/7130488/pexels-photo-7130488.jpeg?auto=compress&cs=tinysrgb&w=600');
+  /* background-size: contain; */
+  background-repeat: no-repeat;
   height: 100vh;
   padding-top: 10px;
   flex-shrink: 0;
@@ -27,7 +29,10 @@ li{
   list-style: none;
 }
 .chatPage {
-  background: linear-gradient(to bottom left,#C0C0C0, #252b30);
+  /* linear-gradient(to bottom left, #C0C0C0, #252b30) */
+  background: url('https://img.freepik.com/free-vector/blue-social-media-background_1017-7008.jpg');
+  background-size: contain;
+  background-repeat: repeat;
   margin:0;
   padding: 10px;
   display: flex;
@@ -46,6 +51,7 @@ li{
   left: 0;
   right: 0;
   z-index: 1000;
+  padding-left: 10px;
 }
 .both-columns{
   margin-left: 0px; 
@@ -67,8 +73,8 @@ li{
   align-items: center;
   display: flex;
   justify-content: flex-end !important;
-}
-.align-items-end {
   align-items: flex-end !important;
   justify-content: flex-end !important;
+  text-align: left;  
 }
+
