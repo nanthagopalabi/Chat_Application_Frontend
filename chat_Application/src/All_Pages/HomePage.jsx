@@ -25,7 +25,7 @@ function HomePage() {
       <Row className='rows'>
         <Col className='sidebar' md={4}>
           <div className="user-list">
-          <InputGroup hasValidation>
+          <InputGroup className='search' hasValidation>
             <Form.Control placeholder="Search" type="text"/>
             <Button variant="primary"><FaSearch /></Button>
          </InputGroup>
