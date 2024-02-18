@@ -2,8 +2,10 @@ import './App.css';
 import { Navigate, Route, Routes } from 'react-router-dom'; 
 import Register from './All_Pages/RegisterPage';
 import SignIn from './All_Pages/LoginPage';
+import MainContainer from './Components/MainContainer';
+import Welcome from './All_Pages/Welcome';
 import { useSelector } from 'react-redux';
-
+// import HomePage from './All_Pages/HomePage';
 
 function App() {
   const token=useSelector((state)=>state.chat.user.token);
@@ -12,17 +14,17 @@ function App() {
     <>
     <div className='App' >
   
-    
     <Routes>
 
 
       <Route exact path='/' element={<SignIn/>}/>
-      {/* <Route path='app' element={token?<MainContainer/>:<Navigate to='/' />}> */}
-      {/* <Route path='welcome' element={<Welcome/>}/> */}
+      <Route path='app' element={token?<MainContainer/>:<Navigate to='/' />}>
+      <Route path='welcome' element={<Welcome/>}/>
+      {/* <Route path='home' element={<HomePage/>}/> */}
       {/* <Route path='chat/:chatId' element={<ChatArea/>}/> */}
        {/* <Route path='create-group' element={<CreateGroup/>}/> */}
 
-      {/* </Route> */}
+      </Route>
 
       <Route path='/register' element={<Register/>
       }/>

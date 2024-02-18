@@ -43,7 +43,7 @@ export default function SignIn() {
       // console.log(user)
       const response = await LoginUser(user);
       console.log(response)
-      const token=response.data.jwttoken
+      const token=response.data.jwtToken
       const id=response.data.user
       console.log(token)
    dispatch(setUserToken({token}));

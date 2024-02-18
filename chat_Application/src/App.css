@@ -12,12 +12,15 @@ body {
   flex-shrink: 0;
   margin-top: 32px;
 }
+/* .welcome-container{
+  display: flex;
+} */
 .rows{
   width: 100vw;
   margin-right: 0 !important;
   height: 100% !important;
 }
-li{
+/* li{
   bottom: 0;
   left: 0;
   padding: 10px;
@@ -26,7 +29,7 @@ li{
   margin:5px;
   background-color: aliceblue;
   list-style: none;
-}
+} */
 .chatPage {
   background: url('https://img.freepik.com/free-vector/blue-social-media-background_1017-7008.jpg');
   background-size: 100% 100%;

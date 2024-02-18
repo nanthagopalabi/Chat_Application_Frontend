@@ -1,10 +1,11 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Form, InputGroup, Button, Navbar, Nav, Image} from 'react-bootstrap';
-import { FaSearch } from "react-icons/fa";
 import { BsFillSendFill } from "react-icons/bs";
 import '../App.css';
 import Emoji from '../Components/Emoji';
+import SideBar from '../Components/SideBar';
+import ChatArea from '../Components/ChatArea';
 
 
 function HomePage() {
@@ -23,19 +24,8 @@ function HomePage() {
       </Navbar>
 
       <Row className='rows'>
-        <Col className='sidebar' md={4}>
-          <div className="user-list">
-          <InputGroup className='search' hasValidation>
-            <Form.Control placeholder="Search" type="text"/>
-            <Button variant="primary"><FaSearch /></Button>
-         </InputGroup>
-            <ul>
-              <li>User 1</li>
-              <li>User 2</li>
-            </ul>
-          </div>
-        </Col>
-
+       <SideBar/>
+       
         <Col className='chatPage d-none d-md-block'  md={8} sm={0}>
           <div className='main-content'>
           <div className="message">User 1: Hello!</div>
