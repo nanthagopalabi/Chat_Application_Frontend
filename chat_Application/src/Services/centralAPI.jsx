@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const API_URL = "https://gmail-clone-backend-z2zd.onrender.com";
+const API_URL = "https://chat-application-n6ij.onrender.com";
 
 
 export const RegisterUser = async (payload) => {

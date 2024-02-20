@@ -104,16 +104,6 @@ const dispatch=useDispatch();
 
     <Row className='rows'>
   
-   {/* <div className='sb-searchBar'>
-   <IconButton>
-    <SearchIcon/>
-    </IconButton>
-    <input type='text' placeholder='search' className='searchbox'
-
-      onChange={(e)=>setUser(e.target.value)}
-    />
-    
-   </div> */}
     <Col className='sidebar' md={4}>
     <div className='sb-header'>
    <div>

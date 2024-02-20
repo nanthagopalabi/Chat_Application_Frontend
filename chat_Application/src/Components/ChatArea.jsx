@@ -11,8 +11,9 @@ import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea } from '../redux/chatSlice';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import '../App.css';
 
-const socket = io("https://gmail-clone-backend-z2zd.onrender.com");
+const socket = io("https://chat-application-n6ij.onrender.com");
 
 function ChatArea() {
 
@@ -147,9 +148,9 @@ const handleSend=async()=>{
 
   return (
   
-    <div className='chatarea-container'>
+    <div className='chatPage d-none d-md-block'  md={8} sm={0}>
     
-        <div className='chatheader-container'>
+        <div className='main-content'>
 
         {showChatArea&&<IconButton onClick={()=>dispatch(setShowChatArea(false))}>
             <KeyboardBackspaceIcon/>

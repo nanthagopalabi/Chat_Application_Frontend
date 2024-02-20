@@ -6,6 +6,7 @@ import MainContainer from './Components/MainContainer';
 import Welcome from './All_Pages/Welcome';
 import { useSelector } from 'react-redux';
 // import HomePage from './All_Pages/HomePage';
+import ChatArea from './Components/ChatArea';
 
 function App() {
   const token=useSelector((state)=>state.chat.user.token);
@@ -21,7 +22,7 @@ function App() {
       <Route path='app' element={token?<MainContainer/>:<Navigate to='/' />}>
       <Route path='welcome' element={<Welcome/>}/>
       {/* <Route path='home' element={<HomePage/>}/> */}
-      {/* <Route path='chat/:chatId' element={<ChatArea/>}/> */}
+      <Route path='chat/:chatId' element={<ChatArea/>}/>
        {/* <Route path='create-group' element={<CreateGroup/>}/> */}
 
       </Route>

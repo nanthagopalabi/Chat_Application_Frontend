@@ -6,23 +6,16 @@ import '../App.css';
 import Emoji from '../Components/Emoji';
 import SideBar from '../Components/SideBar';
 import ChatArea from '../Components/ChatArea';
+import NavBar from '../Components/NavBar';
 
 
 function HomePage() {
   return (
       <>
         <Container className='both-columns'>
-       <Navbar bg="primary" data-bs-theme="dark" className='navbar'>
-          <Navbar.Brand className='logo'>Let'sChat💬 </Navbar.Brand>
-          <Container className="me-auto">
-          <Nav>
-            <Nav.Link>Home</Nav.Link>
-            <Nav.Link>Contacts</Nav.Link>
-            <Image src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?size=626&ext=jpg&ga=GA1.1.210930112.1699676705&semt=ais" alt="Avatar" className="avatar"/>
-          </Nav>
-          </Container>
-      </Navbar>
+          <NavBar/>
 
+      
       <Row className='rows'>
        <SideBar/>
        
