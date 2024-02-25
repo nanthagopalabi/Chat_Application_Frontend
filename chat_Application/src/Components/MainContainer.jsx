@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-// import './myStyles.css'
+import './myStyles.css';
 import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsSmallScreen,setShowChatArea } from '../redux/chatSlice'

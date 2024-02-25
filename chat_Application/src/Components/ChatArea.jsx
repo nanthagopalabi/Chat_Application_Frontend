@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-// import './myStyles.css'
+import './myStyles.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton } from '@mui/material';
-// import MessagefromSelf from './MessagefromSelf';
-// import MessagetoOthers from './MessagetoOthers';
+import MsgFromSelf from './MsgFromSelf';
+import MsgToOthers from './MsgToOthers';
 import { createChat,getChat,sendMessage } from '../Services/centralAPI';
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea } from '../redux/chatSlice';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import '../App.css';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 const socket = io("https://chat-application-n6ij.onrender.com");
 
@@ -43,7 +44,7 @@ const handleSend=async()=>{
     if (!message.content.trim()) {
       return;
     }
-    console.log(token)
+    // console.log(token)
     let resetCopy={...message}
     
     let msg={...resetCopy,_id:chatId,sender:{_id:id}}
@@ -51,19 +52,15 @@ const handleSend=async()=>{
     dispatch(setSingleMessage(msg));
     
     scrollToBottom(); 
-    setMessage({ content: '' });
     socket.emit("new message",msg)
+    setMessage({ content: '' });
 
-    
     
     const data=await sendMessage({...resetCopy,chatId:chatId},token);
     console.log(data)
     // msg._id=data.data.chat._id
     // msg.sender={...data.data.sender}
     // console.log(msg)
-    
-    
-    
     
   } catch (error) {
     console.log(error)
@@ -140,7 +137,7 @@ const handleSend=async()=>{
   
 
   useEffect(() => {
-    console.log("All messages changed:", allMessages); 
+    // console.log("All messages changed:", allMessages); 
     
      scrollToBottom(); 
   }, [allMessages]);
@@ -148,9 +145,11 @@ const handleSend=async()=>{
 
   return (
   
-    <div className='chatPage d-none d-md-block'  md={8} sm={0}>
+    // <div className='chatPage d-none d-md-block' >    
+    //     <div className='main-content'>
+    <div className='chatarea-container'>
     
-        <div className='main-content'>
+        <div className='chatheader-container'>
 
         {showChatArea&&<IconButton onClick={()=>dispatch(setShowChatArea(false))}>
             <KeyboardBackspaceIcon/>
@@ -165,15 +164,18 @@ const handleSend=async()=>{
             <p className='con-timeStamp'>{dummy.timeStamp}</p>
           </div>
           <IconButton>
-            <DeleteIcon/>
+            {/* <DeleteIcon/> */}
+            <MoreHorizIcon/>
           </IconButton>
         </div>
+
         <div className='message-container' >
          {allMessages.length>0&&[...allMessages].map((ele)=>(  
-          <div ref={messagesEndRef} key={ele?._id}>
-          {ele.sender._id===id?(<MessagefromSelf content={ele.content} key={ele?._id}/>)
+        
+        <div ref={messagesEndRef} key={ele?._id}>
+          {ele.sender._id===id?(<MsgFromSelf content={ele.content} key={ele?._id}/>)
          :
-         (<MessagetoOthers content={ele.content} key={ele?._id}/>)}
+         (<MsgToOthers content={ele.content} key={ele?._id}/>)}
          </div>
           
          ))}
@@ -182,8 +184,8 @@ const handleSend=async()=>{
         <input type='text' placeholder='Type a Message' className='searchbox'
           value={message.content}
           onChange={(e) => {
-            setMessage((prevState) => ({
-    ...prevState,
+            setMessage((prev) => ({
+    ...prev,
     content: e.target.value
   }));
  
