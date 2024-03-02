@@ -12,14 +12,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import '../Components/myStyles.css'
+import '../Components/myStyles.css';
 import { useState } from 'react';
 import { LoginUser } from '../Services/centralAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserToken } from '../redux/chatSlice'
 import { useNavigate } from 'react-router-dom';
-// TODO remove, this demo shouldn't need to reset the theme.
 
+// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme({
   palette: {
     background: {
@@ -40,10 +40,10 @@ export default function SignIn() {
   const handleSubmit = async(event) => {
     event.preventDefault();
     try {
-      // console.log(user)
+    
       const response = await LoginUser(user);
       console.log(response)
-      const token=response.data.jwtToken
+      const token=response.data.jwttoken
       const id=response.data.user
       console.log(token)
    dispatch(setUserToken({token}));
@@ -53,9 +53,7 @@ export default function SignIn() {
       
     } catch (error) {
       console.log(error);
-      
     }
-   
   };
 
   return (

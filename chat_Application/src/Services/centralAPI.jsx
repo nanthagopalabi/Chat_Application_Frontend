@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-
 const API_URL = "https://chat-application-n6ij.onrender.com";
-
 
 export const RegisterUser = async (payload) => {
     const response = await axios.post(`${API_URL}/api/register`, payload);
@@ -23,17 +21,17 @@ export const ResetPassword = async (payload,resetToken) => {
     const response = await axios.post(`${API_URL}/user/reset/${resetToken}`, payload);
     return response;
 };
-export const searchUserApi = async (payload,authToken) => {
 
+export const searchUserApi = async (payload,authToken) => {
     const headers = {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
     };
-    const response = await axios.get(`${API_URL}/api/alluser?search=${payload}`,{headers});
+    const response = await axios.get(`${API_URL}/api/all_user?search=${payload}`,{headers});
     return response;
 };
-export const createChat = async (payload,authToken) => {
 
+export const createChat = async (payload,authToken) => {
     const headers = {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
@@ -43,7 +41,6 @@ export const createChat = async (payload,authToken) => {
 };
 
 export const getAllChat = async (authToken) => {
-
     const headers = {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
@@ -62,7 +59,6 @@ export const getChat = async (payload,authToken) => {
 };
 
 export const sendMessage = async (payload,authToken) => {
-
     const headers = {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
@@ -72,12 +68,11 @@ export const sendMessage = async (payload,authToken) => {
 };
 
 export const newGroup = async (payload,authToken) => {
-
     const headers = {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
     };
-    const response = await axios.post(`${BASE_URL}/chat/group`,payload,{headers});
+    const response = await axios.post(`${API_URL}/chat/group`,payload,{headers});
     return response;
 };
 
@@ -86,7 +81,7 @@ export const addNewUser = async (payload,authToken) => {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
     };
-    const response = await axios.put(`${BASE_URL}/chat/groupadd`,payload,{headers});
+    const response = await axios.put(`${API_URL}/chat/groupadd`,payload,{headers});
     return response;
 };
 
@@ -95,15 +90,15 @@ export const RemoveUserApi = async (payload,authToken) => {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
     };
-    const response = await axios.put(`${BASE_URL}/chat/removeuser`,payload,{headers});
+    const response = await axios.put(`${API_URL}/chat/removeuser`,payload,{headers});
     return response;
 };
 
 export const GroupRenameApi = async (payload,authToken) => {
     const headers = {
         'x-auth-token':authToken,
-        'Content-Type':'application/json', 
+        'Content-Type':'application/json',
     };
-    const response = await axios.put(`${BASE_URL}/chat/rename`,payload,{headers});
+    const response = await axios.put(`${API_URL}/chat/rename`,payload,{headers});
     return response;
 };

@@ -68,7 +68,7 @@ padding: 10px;}
     border: none;
     font-size: 1.25rem;
     margin-left: 10px;
-    background-color: rgba(69, 188, 218, 0.589);
+    background-color: transparent;
    }
 }
 
@@ -148,14 +148,14 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     gap: 1rem;
     justify-content: space-between;
-    background-color: white;
+    background-color:  rgba(69, 188, 218, 0.589);
     border-radius: 20px;
     padding: 10px;
 
 }
 
 .input-container{
-    background-color: white;
+    background-color: rgba(69, 188, 218, 0.589);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-radius: 20px;
     padding: 10px 10px;
@@ -166,8 +166,9 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     input{
        font-size: 1rem;
         border: none;
-        outline :none
-        
+        outline :none;
+        background-color: transparent; 
+        flex: 1;
     }
 }
 
@@ -321,3 +322,12 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   .suggestion-list::-webkit-scrollbar{
     display: none;
   }
+  .start-adornment{
+    display: flex;
+    flex-wrap: wrap;
+   
+  }
+
+  .unique-textfield .css-1x51dt5-MuiInputBase-input-MuiInput-input {
+    width: auto !important; /* Override width */
+}

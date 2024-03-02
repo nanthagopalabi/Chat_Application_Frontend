@@ -4,27 +4,15 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import NightlightIcon from '@mui/icons-material/Nightlight';
 import SearchIcon from '@mui/icons-material/Search';
-import {  Button, IconButton } from '@mui/material';
+import { IconButton, Menu, MenuItem } from '@mui/material';
 import ConversationItem from './Conversation';
 import { useDispatch, useSelector } from 'react-redux';
 import { createChat,getAllChat,searchUserApi } from '../Services/centralAPI';
-import { setsearchUsers } from '../redux/chatSlice';
-import { setMyChats } from '../redux/chatSlice';
+import { openCreateGroup, setsearchUsers, setMyChats } from '../redux/chatSlice';
 import { useNavigate } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Navbar, Nav,InputGroup,Form,Image, Row, Col} from 'react-bootstrap';
-import { FaSearch } from "react-icons/fa";
-import NavBar from './NavBar';
-import Welcome from '../All_Pages/Welcome';
-import Pill from './Pill';
+import CreateGroup from './CreateGroup';
 
 function SideBar() {
 
@@ -36,43 +24,48 @@ const [user,setUser]=useState(null);
 const [groupUser,setGroupUser]=useState({name:'',userName:''});
 const [suggestion,setSuggestion]=useState([]);
 const [selected,setSelected]=useState([]);
-const [isDarkTheme, setIsDarkTheme] = useState(false);
 
 const dispatch=useDispatch();
 
   const [open, setOpen] = useState(false)
 
   const handleClickOpen = () => {
-    setOpen(true);
+    dispatch(openCreateGroup());
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseUser = () => {
+    setAnchorEl(null);
+  };
+
   const handleCreation=async(userId)=>{
     try {
-
-       const data=await createChat(userId,token);
+      const data=await createChat(userId,token);
       console.log(data)
        if(data.status==200){
         
-        navigate(`chat/${data.data._id}`)
+        navigate(`chat/${data.data?._id}`)
        }
     } catch (error) {
       console.log(error)
-      
     }
   }
 
   useEffect(()=>{
-   
     const fetchData=async()=>{
       try {
-        
         const data=await searchUserApi(user,token);
         console.log(data.data);
-        console.log(searchUsers)
+        console.log(searchUsers);
           dispatch(setsearchUsers(data.data))
           console.log(searchUsers)
         
@@ -87,11 +80,11 @@ const dispatch=useDispatch();
     const fetchChat=async()=>{
       try {
         const data=await getAllChat(token);
+        console.log(data)
         dispatch(setMyChats(data.data))
         
       } catch (error) {
         console.log(error);
-        
       }
     }
    fetchChat();
@@ -125,42 +118,33 @@ useEffect(()=>{
 
 },[groupUser.userName])  
 
-useEffect(() => {
-  document.body.classList.toggle('dark-theme', isDarkTheme);
-}, [isDarkTheme]);
-
-const handleThemeSwitch = () => {
-  setIsDarkTheme(!isDarkTheme);
-};
+const logout=()=>{
+  localStorage.removeItem('token')
+  localStorage.removeItem('user');
+  navigate('/');
+}
   
   return (
-    // <div className='sidebar-container'>
-    //     <NavBar/>
-
-    // {/* <Row className='rows'> */}
-  
-    // <Col className='sidebar' md={4}>
     <div className='sidebar-container'>
-
-
-    <div className='sb-header'>
+      <div className='sb-header'>
+      <div>
+      <IconButton onClick={handleOpenMenu}>
+      <AccountCircleIcon/>
+      </IconButton>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseUser} >
+        {/* Menu Items */}
+        <MenuItem onClick={logout}>Logout</MenuItem>
+       </Menu>
+      </div>
     <div>
     <IconButton>
-    <AccountCircleIcon/>
-    </IconButton>
-    </div>
-    <div>
-    <IconButton>
-    <PersonAddAlt1Icon/>
+     <PersonAddAlt1Icon/>
     </IconButton>
     <IconButton>
-    <GroupAddIcon/>
+     <GroupAddIcon/>
     </IconButton>
     <IconButton onClick={handleClickOpen}>
-    <AddCircleIcon/>
-    </IconButton>
-    <IconButton  onClick={handleThemeSwitch}>
-    {/* <NightlightIcon/> */}
+     <AddCircleIcon/>
     </IconButton>
     </div>
     </div>
@@ -169,10 +153,7 @@ const handleThemeSwitch = () => {
      <SearchIcon/>
      </IconButton>
      <input type='text' placeholder='search' className='searchbox'
- 
-       onChange={(e)=>setUser(e.target.value)}
-       onKeyDown={handleKeyDown}
-     />
+        onChange={(e)=>setUser(e.target.value)}  onKeyDown={handleKeyDown} />
      
     </div>
     <div>    <ul className='suggestion-list'>
@@ -188,81 +169,9 @@ const handleThemeSwitch = () => {
      
      return <ConversationItem props={ele} key={ele._id}  />
     })}
-    
-     
- 
-       
-    </div>
- 
-    <Dialog
-         open={open}
-         onClose={handleClose}
-         PaperProps={{
-           component: 'form',
-           onSubmit: (event) => {
-             event.preventDefault();
-             
-             
-             handleClose();
-           },
-         }}
-       ><DialogTitle>Subscribe</DialogTitle>
-         <DialogContent>
-           <DialogContentText>
-            Create a New Group
-           </DialogContentText>
-           <TextField
-             autoFocus
-             required
-             margin="dense"
-             id="name"
-             name="name"
-             label="Group Name"
-             type="text"
-             fullWidth
-             variant="standard"
-             value={groupUser.name}
-             onChange={(e) => setGroupUser({ ...groupUser, [e.target.name]: e.target.value})}
-           />
-           
-           <TextField
-             autoFocus
-             required
-             margin="dense"
-             id="user"
-             name="userName"
-             label="Users"
-             type="text"
-             fullWidth
-             variant="standard"
-             value={groupUser.userName}
-             onChange={(e) => setGroupUser({ ...groupUser, [e.target.name]: e.target.value })}  
-             InputProps={{
-         startAdornment: (
-             <span className="start-adornment">{selected.length>0&&selected.map((ele)=>{
-               <Pill />
-             })} </span>
-         ),
-     }}         
-           />
-            <ul className='suggestion-list'>
-    
-    {suggestion.length>0&&suggestion?.map((ele)=> (
-      <li key={ele._id} >{ele.name}</li>
-    ))}
-  </ul>
-         </DialogContent>
-       
-        
-         <DialogActions>
-        
-           <Button onClick={handleClose}>Cancel</Button>
-           <Button type="submit">Create</Button>
-         </DialogActions>
-       </Dialog>
- 
- 
-     </div>
+   </div>
+    <CreateGroup/>
+   </div>
    )
  }
  export default SideBar

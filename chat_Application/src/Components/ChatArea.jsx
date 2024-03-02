@@ -1,15 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './myStyles.css';
-import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { IconButton } from '@mui/material';
+import { IconButton,Menu, MenuItem } from '@mui/material';
 import MsgFromSelf from './MsgFromSelf';
 import MsgToOthers from './MsgToOthers';
 import { createChat,getChat,sendMessage } from '../Services/centralAPI';
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea } from '../redux/chatSlice';
+import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage, setAddUsertoGroup, toggleRemoveUser, toggleGroupName } from '../redux/chatSlice';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import '../App.css';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -19,7 +18,7 @@ const socket = io("https://chat-application-n6ij.onrender.com");
 function ChatArea() {
 
   const dispatch = useDispatch();
-  const {allMessages}=useSelector((state)=>state.chat);
+  const {allMessages, addUserToGroup, message}=useSelector((state)=>state.chat);
   const {selectedChat,showChatArea}=useSelector((state)=>state.chat);
   const token=JSON.parse(localStorage.getItem('token'));
   const id=JSON.parse(localStorage.getItem('user'));
@@ -27,16 +26,22 @@ function ChatArea() {
   const [isTyping, setIsTyping] = useState(false);      
 
   const {chatId}=useParams();
-  const [message,setMessage]=useState({content:''});
+  // const [message,setMessage]=useState({content:''});
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
  
-  // console.log(chatId)
   const dummy={
     name:"hello",
-      lastMessage:"hi1",
-      timeStamp:"today"
-
+    lastMessage:"hi1",
+    timeStamp:"today"
   }
- 
 
 const handleSend=async()=>{
   try {
@@ -44,27 +49,22 @@ const handleSend=async()=>{
     if (!message.content.trim()) {
       return;
     }
-    // console.log(token)
     let resetCopy={...message}
     
     let msg={...resetCopy,_id:chatId,sender:{_id:id}}
+    console.log(id)
     
     dispatch(setSingleMessage(msg));
     
     scrollToBottom(); 
     socket.emit("new message",msg)
-    setMessage({ content: '' });
+    dispatch(updateMessageContent(''));
 
-    
     const data=await sendMessage({...resetCopy,chatId:chatId},token);
     console.log(data)
-    // msg._id=data.data.chat._id
-    // msg.sender={...data.data.sender}
-    // console.log(msg)
     
   } catch (error) {
-    console.log(error)
-    
+    console.log(error)    
   }
 }
 
@@ -77,7 +77,7 @@ const handleSend=async()=>{
         console.log(data);
        
         dispatch(setAllMessages(data.data));
-        dispatch(setSelectedChat(data.data[0].chat));
+        dispatch(setSelectedChat(data.data[0]?.chat));
         socket.emit("setup", { data: { id: id } }); 
        
       } catch (error) {
@@ -89,37 +89,24 @@ const handleSend=async()=>{
     return ()=>{
       dispatch(setEmpty());
     }
-    
   },[chatId]);
+
   useEffect(() => {
     socket.emit("join chat", chatId);
-
     socket.on("message received", (msg) => {
-      
+      dispatch(setNewMessage(msg));
       dispatch(setSingleMessage(msg));
-    
     });
    
-
     return () => {
       socket.off("message received"); // Cleanup event 
     };
   }, [chatId]);
-  useEffect(() => {
-    socket.on("onlineUsers", (users) => {
-      console.log("Online Users:", users);
-      // Update your UI to display the list of online users
-    });
-  
-    return () => {
-      // Cleanup function to remove the event listener when the component unmounts
-      socket.off("onlineUsers");
-    };
-  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView()
   };
+
   useEffect(() => {
     const typingTimeout = setTimeout(() => {
       setIsTyping(false);
@@ -128,27 +115,80 @@ const handleSend=async()=>{
     return () => clearTimeout(typingTimeout);
   }, [message.content]);
 
-  const handleTyping = () => {
+  const handleUserTyping = () => {
     setIsTyping(true);
     socket.emit("typing", { chatId, isTyping: true }); // Emit typing status
   };
 
-
-  
-
   useEffect(() => {
-    // console.log("All messages changed:", allMessages); 
-    
      scrollToBottom(); 
   }, [allMessages]);
 
+  const handleAddUser=()=>{
+    dispatch(setAddUsertoGroup());
+    handleClose();
+  }
+
+  const handleRemoveUser=()=>{
+    dispatch(toggleRemoveUser());
+    handleClose();
+  }
+  
+  const handleGroupNameChange=()=>{
+    dispatch(toggleGroupName());
+    handleClose();
+  }
+
+  const formatDate = (date) => {
+    try {
+      // Attempt to parse the date string
+      const parsedDate = new Date(date);
+      
+      // Check if the parsed date is valid
+      if (!isNaN(parsedDate)) {
+        // Return the formatted date
+        return parsedDate.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      } else {
+       
+        return moment().format();;
+      }
+    } catch (error) {
+      
+      console.error("Error formatting date:", error);
+      return "Error";
+    }
+  };
+  
+
+  const handleTyping = (e) => {
+    if (e.key === "Enter") {
+      handleSend();
+      return
+    }
+    
+    dispatch(updateMessageContent((e.target.value)));
+    
+  };
+
+  useEffect(() => {
+    socket.on("onlineUsers", (users) => {
+      console.log("Online Users:", users);
+      
+    });
+  
+    return () => {
+      // Cleanup function to remove the event listener when the component unmounts
+      socket.off("onlineUsers");
+    };
+  }, []);
+
 
   return (
-  
-    // <div className='chatPage d-none d-md-block' >    
-    //     <div className='main-content'>
     <div className='chatarea-container'>
-    
         <div className='chatheader-container'>
 
         {showChatArea&&<IconButton onClick={()=>dispatch(setShowChatArea(false))}>
@@ -158,49 +198,64 @@ const handleSend=async()=>{
           <p className='con-icon'>{!selectedChat?.isGroupChat &&<img />}</p>
         
           <div className='header-text'>
-            <p className='con-title '>{selectedChat.chatName!=='sender'?
-            (selectedChat?.chatName): 
-             (selectedChat &&selectedChat.users?.length>0&&selectedChat?.users[1]?.name)}</p>
+            <p className='con-title '>{selectedChat && selectedChat?.chatName !== 'sender' ?
+            (selectedChat?.chatName):
+            (selectedChat && selectedChat.users?.length > 0 && selectedChat?.users[1]?.name)}</p>
             <p className='con-timeStamp'>{dummy.timeStamp}</p>
           </div>
-          <IconButton>
-            {/* <DeleteIcon/> */}
+          <IconButton onClick={handleClick}>
             <MoreHorizIcon/>
           </IconButton>
+          {selectedChat?.chatName!=='sender'&&
+          <Menu  anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} >
+           <MenuItem onClick={handleAddUser}>Add a User</MenuItem>
+           <MenuItem onClick={handleRemoveUser}>Remove User</MenuItem>
+           <MenuItem onClick={handleGroupNameChange}>Change Group Name</MenuItem>
+          </Menu>
+          }
         </div>
 
         <div className='message-container' >
-         {allMessages.length>0&&[...allMessages].map((ele)=>(  
-        
-        <div ref={messagesEndRef} key={ele?._id}>
-          {ele.sender._id===id?(<MsgFromSelf content={ele.content} key={ele?._id}/>)
-         :
-         (<MsgToOthers content={ele.content} key={ele?._id}/>)}
-         </div>
+         {allMessages.length>0 &&allMessages.map((ele,index)=>{
+
+          // Calculate the date for the current message
+      const currentDate = formatDate(ele.createdAt);
+
+      // Determine if it's a new date compared to the previous message
+      const previousMessage = index > 0 ? allMessages[index - 1] : null;
+      const previousDate = previousMessage ? formatDate(previousMessage.createdAt) :null;
+      const isNewDate = currentDate !== previousDate || index === 0; // Add index === 0 check for the first message
+
+      // Check if it's the last message
+      const isLastMessage = index === allMessages.length - 1;
+      return (
+          <div ref={messagesEndRef}  key={nanoid()}>
+          {isNewDate && <div className="date-header">{currentDate}</div>}          
           
-         ))}
+          {ele.sender._id===id?(<MessagefromSelf content={ele} />)
+         :
+         (<MessagetoOthers content={ele}  />)}
+         </div>
+         
+         )})}
         </div>
         <div className='input-container'>
         <input type='text' placeholder='Type a Message' className='searchbox'
-          value={message.content}
-          onChange={(e) => {
-            setMessage((prev) => ({
-    ...prev,
-    content: e.target.value
-  }));
- 
-  } 
-  }
-  onKeyDown={() => {
-        handleTyping();
-    }}
-        />
-        <IconButton onClick={handleSend}>
+          value={message?.content||""}
+          onChange={(e) => dispatch(updateMessageContent(e.target.value))}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+      handleSend();}
+    }} />
+
+        <IconButton onClick={()=>handleSend()}>
           <SendIcon/>
         </IconButton>
         </div>
+       {/* <AddUser/>
+       <RemoveUser/>
+       <RenameGroup/> */}
     </div>
   )
 }
-
 export default ChatArea
