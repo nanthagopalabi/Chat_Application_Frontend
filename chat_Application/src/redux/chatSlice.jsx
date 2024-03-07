@@ -33,12 +33,10 @@ const chatSlice = createSlice({
         },
 
         setUserToken:(state,action)=>{
-           
             state.user.token=action.payload
         },
 
         openCreateGroup:(state,action)=>{
-            
             state.createGroup=true
         },
 
@@ -54,6 +52,10 @@ const chatSlice = createSlice({
             state.removeUser=!state.removeUser
         },
 
+        toggleSearch:(state)=>{
+            state.searchPage=!state.searchPage
+        },
+
         toggleGroupName:(state,action)=>{
             state.groupNameChange=!state.groupNameChange
         },
@@ -66,6 +68,10 @@ const chatSlice = createSlice({
             state.searchUsers =action.payload
         },
 
+        updateMessageContent: (state, action) => {
+            state.message.content = action.payload;
+        },
+
         setSelectedChat:(state,action)=>{
             state.selectedChat=action.payload
         },
@@ -73,7 +79,7 @@ const chatSlice = createSlice({
         removeUserSelectedChat:(state,action)=>{
             if (state.selectedChat) {
                 // Filter out the user to be removed from the selected chat's users array
-                state.selectedChat.users = state.selectedChat.users.filter(user => user._id !== action.payload._id);
+                state.selectedChat.users = state.selectedChat.users?.filter(user => user?._id !== action.payload._id);
             }
         },
 
@@ -92,7 +98,7 @@ const chatSlice = createSlice({
         },
 
         removeSelectForGrp:(state, action)=>{
-            state.selectForGrp = state.selectForGrp.filter((u)=> u._id !== action.payload._id)
+            state.selectForGrp = state.selectForGrp.filter((u)=> u._id !== action.payload?._id)
         },
 
         setEmpty:(state)=>{
@@ -105,18 +111,21 @@ const chatSlice = createSlice({
         setAllMessages:(state, action)=>{
             const uniqueMessages = action.payload.filter(newMessage => {
                 // Check if the _id of the new message already exists in the allMessages array
-                return !state.allMessages.some(existingMessage => existingMessage._id === newMessage._id);
+                return !state.allMessages.some(existingMessage => existingMessage?._id === newMessage?._id);
             });
             state.allMessages = [...state.allMessages, ...uniqueMessages];
         },
 
-        setSingleMessage:(state, action)=>{
-                state.allMessages.push(action.payload);
+        setSingleMessage: (state, action) => {
+            // Modify this logic to ensure only serializable values are dispatched
+            const { _id, sender, ...rest } = action.payload;
+            state.singleMessage = { _id, sender, ...rest };    
+            state.allMessages.push(action.payload);
         },
 
         setNewMessage:(state, action)=>{    
             state.myChats = state.myChats.map((chat) => {
-                if (chat._id === action.payload._id) {
+                if (chat?._id === action.payload?._id) {
                     return {
                         ...chat,
                         latestMessage: action.payload
@@ -129,8 +138,8 @@ const chatSlice = createSlice({
     }
 });
 
-export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,setAddUsertoGroup,
-    toggleRemoveUser,removeUserSelectedChat,toggleGroupName,setGroupRename,setShowChatArea,
+export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,setAddUsertoGroup,updateMessageContent,
+    toggleRemoveUser,removeUserSelectedChat,toggleGroupName,setGroupRename,setShowChatArea,toggleSearch,
     setUserToken,setMyChats,setSelectedChat, setsearchUsers,setSelectUser, setSelectForGrp,
     removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
 

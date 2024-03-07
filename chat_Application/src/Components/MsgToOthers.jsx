@@ -1,27 +1,21 @@
 import React from 'react';
+import moment from 'moment';
 import './myStyles.css';
 
 function MsgToOthers({content}) {
-
-  const utcTimestamp = new Date(content.updatedAt);
-   // Convert to Indian Standard Time (IST)
-   const options = {
-    timeZone: 'Asia/Kolkata',
-    hour12: false, // 24-hour format
-    hour: '2-digit', // display hours
-    minute: '2-digit', // display minutes
-  };
-
-  // Convert to Indian Standard Time (IST)
-  const istTimestamp = utcTimestamp.toLocaleString('en-IN', options);
-
-console.log(istTimestamp);
+  const formattedTimestamp = content.updatedAt
+  ? moment(content.updatedAt).format('HH:mm')
+  :moment().format('HH:mm');
+  
   return (
-    <div className='message-other'>
-    <span>{content.content}
-    <span className='time'>{istTimestamp}</span>
-    </span>
-    </div>
+    <>
+      <sup className='other'>{content?.sender?.name}</sup>
+      <div className='message-other'>
+        <span>{content.content}
+        <sub className='time'>{formattedTimestamp}</sub>
+        </span>
+      </div>
+    </>
   )
 }
 export default MsgToOthers

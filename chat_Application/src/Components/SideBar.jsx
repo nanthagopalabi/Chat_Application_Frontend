@@ -9,10 +9,11 @@ import { IconButton, Menu, MenuItem } from '@mui/material';
 import ConversationItem from './Conversation';
 import { useDispatch, useSelector } from 'react-redux';
 import { createChat,getAllChat,searchUserApi } from '../Services/centralAPI';
-import { openCreateGroup, setsearchUsers, setMyChats } from '../redux/chatSlice';
+import { openCreateGroup, setsearchUsers, setMyChats, toggleSearch } from '../redux/chatSlice';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CreateGroup from './CreateGroup';
+import UserGroups from './UserGroup';
+
 
 function SideBar() {
 
@@ -22,12 +23,10 @@ const searchUsers=useSelector((state)=>state.chat.searchUsers)
 const navigate=useNavigate();
 const [user,setUser]=useState(null);
 const [groupUser,setGroupUser]=useState({name:'',userName:''});
-const [suggestion,setSuggestion]=useState([]);
-const [selected,setSelected]=useState([]);
-
+// const [suggestion,setSuggestion]=useState([]);
+// const [selected,setSelected]=useState([]);
 const dispatch=useDispatch();
-
-  const [open, setOpen] = useState(false)
+const [open, setOpen] = useState(false)
 
   const handleClickOpen = () => {
     dispatch(openCreateGroup());
@@ -52,7 +51,6 @@ const dispatch=useDispatch();
       const data=await createChat(userId,token);
       console.log(data)
        if(data.status==200){
-        
         navigate(`chat/${data.data?._id}`)
        }
     } catch (error) {
@@ -60,7 +58,7 @@ const dispatch=useDispatch();
     }
   }
 
-  useEffect(()=>{
+  // useEffect(()=>{
     const fetchData=async()=>{
       try {
         const data=await searchUserApi(user,token);
@@ -76,7 +74,8 @@ const dispatch=useDispatch();
     if(user){
       fetchData();
     }
-
+    
+    useEffect(()=>{
     const fetchChat=async()=>{
       try {
         const data=await getAllChat(token);
@@ -87,9 +86,9 @@ const dispatch=useDispatch();
         console.log(error);
       }
     }
-   fetchChat();
-
-  },[user]);
+    if(!user){
+   fetchChat();}
+  },[user, dispatch]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Backspace' && !user) {
@@ -137,7 +136,7 @@ const logout=()=>{
        </Menu>
       </div>
     <div>
-    <IconButton>
+    <IconButton onClick={()=>dispatch(toggleSearch())}>
      <PersonAddAlt1Icon/>
     </IconButton>
     <IconButton>
@@ -158,7 +157,7 @@ const logout=()=>{
     </div>
     <div>    <ul className='suggestion-list'>
     
-       {searchUsers.length>0&&searchUsers?.map((ele)=> (
+       {searchUsers.length>0 && searchUsers?.map((ele)=> (
          <li key={ele._id}  onClick={()=>handleCreation(ele._id)}>{ele.name}</li>
        ))}
      </ul>
@@ -170,7 +169,8 @@ const logout=()=>{
      return <ConversationItem props={ele} key={ele._id}  />
     })}
    </div>
-    <CreateGroup/>
+    <UserGroups/>
+    {/* <SearchUser/> */}
    </div>
    )
  }

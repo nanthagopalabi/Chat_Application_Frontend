@@ -36,8 +36,13 @@ export const createChat = async (payload,authToken) => {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
     };
+    try{
     const response = await axios.post(`${API_URL}/chat/`,{userId:payload},{headers});
     return response;
+} catch (error) {
+    console.error('Error creating chat:', error);
+    throw error; // Rethrow the error to handle it elsewhere
+}
 };
 
 export const getAllChat = async (authToken) => {

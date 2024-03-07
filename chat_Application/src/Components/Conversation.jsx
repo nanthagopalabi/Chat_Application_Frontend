@@ -3,26 +3,21 @@ import './myStyles.css';
 import { useNavigate } from 'react-router-dom';
 import { setSelectedChat, setShowChatArea } from '../redux/chatSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 
 function ConversationItem({props}) {
   const navigate=useNavigate();
   const dispatch=useDispatch();
   const {isSmallScreen}=useSelector((state)=>state.chat)
-   
-
   const handleNavigation=(user)=>{
-    
-    
-if(isSmallScreen){
-  dispatch(setShowChatArea(true));
-}
+      
+  if(isSmallScreen){
+    dispatch(setShowChatArea(true));
+  }
 
     dispatch(setSelectedChat(user));
-
-    navigate(`chat/${props._id}`)
-
-    
+    navigate(`chat/${props?._id}`)
   }
   
   return (
@@ -30,27 +25,21 @@ if(isSmallScreen){
         
     {props.chatName === "sender" ? (
       <>
-        <p className='con-icon'>{props?.users[1]?.name.charAt(0)}</p>
-         <p className='con-title'>{props?.users[1]?.name}</p>
-           <p className='con-latestMessage'>{props?.latestMessage?.content}</p>
+        <p className='con-icon'>{props?.users[0]?.name.charAt(0)}</p>
+        <h5 className='con-title'>{props?.users[0]?.name}</h5>
+        <h6 className='con-latestMessage'>{props?.latestMessage?.content}</h6>
         <p className='con-timeStamp'>{props.timeStamp}</p>
        
          </>
       ) : (
         <>
-        <p className='con-icon'>{props.chatName.charAt(0)}</p>
-        <p className='con-title'>{props?.chatName}</p>
-        <p className='con-latestMessage'>{props?.latestMessage?.content}</p>
+        <p className='con-icon'><GroupsIcon/></p>
+        <h5 className='con-title'>{props?.chatName}</h5>
+        <h6 className='con-latestMessage'>{props?.latestMessage?.content}</h6>
         <p className='con-timeStamp'>{props.timeStamp}</p>
         </>
       )}
-     
-        
-        {/* <p className='con-title'>{props?.users[1].name}</p> */}
-        {/* <p className='con-latestMessage'>{props.lastMessage}</p>
-        <p className='con-timeStamp'>{props.timeStamp}</p> */}
     </div>
   )
 }
-
 export default ConversationItem

@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Pill({name,onClick}) {
+function Pill({name,key,onClick}) {
     return (
       <>
-      <span className='pill' >
+      <span className='pill' key={key} >
           <img />
           {name} 
           &nbsp;

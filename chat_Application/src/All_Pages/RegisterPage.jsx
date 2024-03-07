@@ -12,11 +12,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import '../Components/myStyles.css'
 import { useState } from 'react';
-import { LoginUser, RegisterUser } from '../Services/centralAPI';
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import { RegisterUser } from '../Services/centralAPI';
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme({
   palette: {
@@ -27,31 +25,31 @@ const defaultTheme = createTheme({
 });
 
 export default function Register() {
+  const navigate = useNavigate(); 
 
-  const [user,setUser]=useState({
-    name:"",
-    email:"",
-    password:"" 
-  
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: ""
   });
-  const handleSubmit = async(event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        console.log(user)
+      console.log(user);
       const response = await RegisterUser(user);
-      
-      console.log(response)
-      
+      if (response.status) {
+        navigate('/'); 
+        return;
+      }
     } catch (error) {
       console.log(error);
-      
     }
-   
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs" fixed={true}  className='login'>
+      <Container component="main" maxWidth="xs" fixed={true} className='login'>
         <CssBaseline />
         <Box
           sx={{
@@ -61,7 +59,6 @@ export default function Register() {
             alignItems: 'center',
           }}
         >
-
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -69,7 +66,7 @@ export default function Register() {
             Register
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
+            <TextField
               margin="normal"
               required
               fullWidth
@@ -78,7 +75,7 @@ export default function Register() {
               name="name"
               autoComplete="name"
               autoFocus
-              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
+              onChange={(e) => setUser({ ...user, [e.target.name]: e.target.value })}
             />
             <TextField
               margin="normal"
@@ -89,7 +86,7 @@ export default function Register() {
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
+              onChange={(e) => setUser({ ...user, [e.target.name]: e.target.value })}
             />
             <TextField
               margin="normal"
@@ -100,7 +97,7 @@ export default function Register() {
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
+              onChange={(e) => setUser({ ...user, [e.target.name]: e.target.value })}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -110,19 +107,11 @@ export default function Register() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
+              sx={{ mt: 3, mb: 2 }}> Sign Up </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link href="/" variant="body2">
+                  {"Already Registered? Sign In"}
                 </Link>
               </Grid>
             </Grid>

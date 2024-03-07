@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './myStyles.css';
 import SendIcon from '@mui/icons-material/Send';
+import GroupsIcon from '@mui/icons-material/Groups';
 import { IconButton,Menu, MenuItem } from '@mui/material';
 import MsgFromSelf from './MsgFromSelf';
 import MsgToOthers from './MsgToOthers';
@@ -8,10 +9,16 @@ import { createChat,getChat,sendMessage } from '../Services/centralAPI';
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage, setAddUsertoGroup, toggleRemoveUser, toggleGroupName } from '../redux/chatSlice';
+import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage, setAddUsertoGroup, toggleRemoveUser,updateMessageContent, toggleGroupName } from '../redux/chatSlice';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import '../App.css';
+import AddUser from './AddUser';
+import RemoveUser from './RemoveUser';
+import RenameGroup from './RenameGroup';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import moment from 'moment';
+import { nanoid } from 'nanoid';
+import Emoji from './Emoji';
 
 const socket = io("https://chat-application-n6ij.onrender.com");
 
@@ -23,10 +30,10 @@ function ChatArea() {
   const token=JSON.parse(localStorage.getItem('token'));
   const id=JSON.parse(localStorage.getItem('user'));
   const messagesEndRef = useRef(null);
-  const [isTyping, setIsTyping] = useState(false);      
+  const [isTyping, setIsTyping] = useState(false);     
 
   const {chatId}=useParams();
-  // const [message,setMessage]=useState({content:''});
+  
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -35,6 +42,10 @@ function ChatArea() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleEmojiSelect = (emoji) => {
+    dispatch(updateMessageContent((prevContent) => prevContent + emoji));
   };
  
   const dummy={
@@ -52,7 +63,6 @@ const handleSend=async()=>{
     let resetCopy={...message}
     
     let msg={...resetCopy,_id:chatId,sender:{_id:id}}
-    console.log(id)
     
     dispatch(setSingleMessage(msg));
     
@@ -74,7 +84,7 @@ const handleSend=async()=>{
         const token=JSON.parse(localStorage.getItem('token'));
         dispatch(setEmpty());
         const data=await getChat(chatId,token);
-        console.log(data);
+        console.log(data.data);
        
         dispatch(setAllMessages(data.data));
         dispatch(setSelectedChat(data.data[0]?.chat));
@@ -120,6 +130,17 @@ const handleSend=async()=>{
     socket.emit("typing", { chatId, isTyping: true }); // Emit typing status
   };
 
+  useEffect(()=>{
+    socket.on("typing", ({chatId, isTyping})=>{
+      setIsTyping(isTyping);
+      console.log("typing");
+    });
+    return()=>{
+      socket.off("typing");
+    };
+  }, [chatId,selectedChat]);
+
+  //scroll to bottom to see last msg
   useEffect(() => {
      scrollToBottom(); 
   }, [allMessages]);
@@ -139,6 +160,14 @@ const handleSend=async()=>{
     handleClose();
   }
 
+  const handleTyping=(e)=>{
+    if(e.key === "Event"){
+      handleSend();
+      return
+    }
+    dispatch(updateMessageContent((e.target.value)));
+  };
+
   const formatDate = (date) => {
     try {
       // Attempt to parse the date string
@@ -154,7 +183,7 @@ const handleSend=async()=>{
         });
       } else {
        
-        return moment().format();;
+        return moment().format(('MMMM D, YYYY'));
       }
     } catch (error) {
       
@@ -164,20 +193,9 @@ const handleSend=async()=>{
   };
   
 
-  const handleTyping = (e) => {
-    if (e.key === "Enter") {
-      handleSend();
-      return
-    }
-    
-    dispatch(updateMessageContent((e.target.value)));
-    
-  };
-
   useEffect(() => {
     socket.on("onlineUsers", (users) => {
       console.log("Online Users:", users);
-      
     });
   
     return () => {
@@ -195,17 +213,28 @@ const handleSend=async()=>{
             <KeyboardBackspaceIcon/>
           </IconButton>}
         
-          <p className='con-icon'>{!selectedChat?.isGroupChat &&<img />}</p>
-        
-          <div className='header-text'>
-            <p className='con-title '>{selectedChat && selectedChat?.chatName !== 'sender' ?
+          <div className='con-icon'>
+          {selectedChat?.isGroupChat ? (
+            // Render a different icon for group chats
+            <div className="group-icon"><GroupsIcon/></div>
+          ) : (
+            // Render the initial letter of the chat name for non-group chats
+            selectedChat?.chatName && (
+              <div className="chat-initial">{selectedChat?.users[0]?.name.charAt(0)}</div>
+            )
+          )}
+        </div>
+                
+          <span className='header-text'>
+            <h5 className='con-title '>{selectedChat && selectedChat?.chatName !== 'sender' ?
             (selectedChat?.chatName):
-            (selectedChat && selectedChat.users?.length > 0 && selectedChat?.users[1]?.name)}</p>
-            <p className='con-timeStamp'>{dummy.timeStamp}</p>
-          </div>
+            (selectedChat && selectedChat.users?.length > 0 && selectedChat?.users[0]?.name)}</h5>
+            {/* <p className='con-timeStamp'>{isTyping?("typing"):(dummy.timeStamp)}</p> */}
+          </span>
           <IconButton onClick={handleClick}>
             <MoreHorizIcon/>
           </IconButton>
+ 
           {selectedChat?.chatName!=='sender'&&
           <Menu  anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} >
            <MenuItem onClick={handleAddUser}>Add a User</MenuItem>
@@ -232,9 +261,9 @@ const handleSend=async()=>{
           <div ref={messagesEndRef}  key={nanoid()}>
           {isNewDate && <div className="date-header">{currentDate}</div>}          
           
-          {ele.sender._id===id?(<MessagefromSelf content={ele} />)
+          {ele.sender?._id===id?(<MsgFromSelf content={ele} />)
          :
-         (<MessagetoOthers content={ele}  />)}
+         (<MsgToOthers content={ele}  />)}
          </div>
          
          )})}
@@ -247,14 +276,14 @@ const handleSend=async()=>{
             if (e.key === "Enter") {
       handleSend();}
     }} />
-
+         <Emoji/>
         <IconButton onClick={()=>handleSend()}>
           <SendIcon/>
         </IconButton>
         </div>
-       {/* <AddUser/>
+       <AddUser/>
        <RemoveUser/>
-       <RenameGroup/> */}
+       <RenameGroup/>
     </div>
   )
 }
