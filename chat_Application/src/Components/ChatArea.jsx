@@ -33,7 +33,6 @@ function ChatArea() {
   const [isTyping, setIsTyping] = useState(false);     
 
   const {chatId}=useParams();
-  
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {

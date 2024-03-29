@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
-import './AllPages.css';
+import '../Components/myStyles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserToken } from '../redux/chatSlice'
 import { useNavigate } from 'react-router-dom';
@@ -47,9 +47,10 @@ export default function Forget() {
   };
 
 return (
+  <>
+    <Container className="mainContainer">
+    <img className="imgForget" src='https://img.freepik.com/free-vector/reset-password-concept-illustration_114360-7886.jpg?w=740&t=st=1699686746~exp=1699687346~hmac=942b78b313f9cc790aac1755c788ad1630d52179bb9f9b4b9813479a67880386'/>
     <ThemeProvider theme={defaultTheme}>
-      <Container className="imgRegister">
-      {/* <img src='https://img.freepik.com/free-vector/reset-password-concept-illustration_114360-7886.jpg?w=740&t=st=1699686746~exp=1699687346~hmac=942b78b313f9cc790aac1755c788ad1630d52179bb9f9b4b9813479a67880386'/> */}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -91,11 +92,6 @@ return (
               Send Reset Mail
             </Button>
             <Grid container>
-              {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid> */}
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
@@ -105,7 +101,8 @@ return (
           </Box>
         </Box>
       </Container>
-      </Container>
     </ThemeProvider>
+    </Container>
+    </>
   );
 }

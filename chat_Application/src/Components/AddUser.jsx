@@ -120,10 +120,8 @@ const handleAdduser=async()=>{
          
           onSubmit: (event) => {
             event.preventDefault();
-            handleAdduser();
-            
+            handleAdduser();            
             dispatch(setAddUsertoGroup());
-            
           },
         }}
       ><DialogTitle>Add a User to Group</DialogTitle>
@@ -145,11 +143,9 @@ const handleAdduser=async()=>{
             InputProps={{ readOnly: true }}
             />
 
-          
            <TextField
            ref={input}
-            autoFocus
-          
+            autoFocus          
             margin="dense"
             id="users"
             name="users"
@@ -173,16 +169,15 @@ const handleAdduser=async()=>{
            <ul className='suggestion-list'>
    
            {suggestion && suggestion.length > 0 && suggestion.map((ele, index) => (
-  <li key={index} onClick={() => handleSuggestion(ele)}>
-    {ele.name} -- {ele.email}
-  </li>
-))}
- </ul>
+          <li key={index} onClick={() => handleSuggestion(ele)}>
+            {ele.name} -- {ele.email}
+          </li>
+        ))}
+        </ul>
         </DialogContent>
       
        
-        <DialogActions>
-       
+        <DialogActions>      
           <Button onClick={()=>dispatch(setAddUsertoGroup())}>Cancel</Button>
           <Button type="submit">Add User</Button>
         </DialogActions>
@@ -191,5 +186,4 @@ const handleAdduser=async()=>{
     </>
   )
 }
-
 export default AddUser

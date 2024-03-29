@@ -48,6 +48,10 @@ export default function Register() {
   };
 
   return (
+  <>
+    <Container className="mainContainer">
+      <img className="imgLogin" src="https://img.freepik.com/free-vector/sign-up-concept-illustration_114360-7965.jpg?t=st=1711701372~exp=1711704972~hmac=c0f378617b4ea536c40cc88b212238f14c146b3bd92067e21d5c26ec913f0065&w=740"/>
+  
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs" fixed={true} className='login'>
         <CssBaseline />
@@ -111,7 +115,7 @@ export default function Register() {
             <Grid container>
               <Grid item>
                 <Link href="/" variant="body2">
-                  {"Already Registered? Sign In"}
+                  {"Already Registered? Log In"}
                 </Link>
               </Grid>
             </Grid>
@@ -119,5 +123,7 @@ export default function Register() {
         </Box>
       </Container>
     </ThemeProvider>
+    </Container>
+    </>
   );
 }

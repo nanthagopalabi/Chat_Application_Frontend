@@ -57,6 +57,10 @@ export default function SignIn() {
   };
 
   return (
+    <>
+    <Container className="mainContainer">
+      <img className="imgLogin" src="https://img.freepik.com/free-vector/cloud-computing-security-abstract-concept-illustration_335657-2105.jpg?w=740&t=st=1711694562~exp=1711695162~hmac=046a9af56be91df00e4c40d9fd166918cd1f24501a10c45876d0a66b587ca0ba"/>
+    
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs" fixed={true}  className='login'>
         <CssBaseline />
@@ -73,7 +77,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Log In
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -108,7 +112,7 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Log In
             </Button>
             <Grid container>
               <Grid item xs>
@@ -118,7 +122,7 @@ export default function SignIn() {
               </Grid>
               <Grid item>
                 <Link href="/register" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  {"Don't have an account? Click Register"}
                 </Link>
               </Grid>
             </Grid>
@@ -126,5 +130,7 @@ export default function SignIn() {
         </Box>
       </Container>
     </ThemeProvider>
+    </Container>
+    </>
   );
 }

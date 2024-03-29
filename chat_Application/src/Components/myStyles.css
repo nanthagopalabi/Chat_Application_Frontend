@@ -274,17 +274,9 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 }
 
-.login{
-    display: flex;
-    border-radius: 20px;
-    background-color: white;
-    
-}
-
 .user-group{
   flex: 0.7;
-  background-color: greenyellow;
-    
+  background-color: greenyellow;    
 }
 
 
@@ -337,3 +329,31 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 .conversation-container:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
+
+.mainContainer{
+    border-radius: 20px;
+    display:flex !important;
+    max-width: 100%;
+    height:100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 2%;
+}
+.imgLogin{
+    flex: 1 1 60%;
+    height: 50%;
+    max-width: 50%;
+}
+@media screen and (max-width: 768px) {
+    .imgLogin {
+      display: none;
+    }
+    .imgForget{
+        display: none;
+    }
+  }
+  .imgForget{
+    flex: 1 1 60%;
+    height: 40%;
+    max-width: 40%;
+  }
