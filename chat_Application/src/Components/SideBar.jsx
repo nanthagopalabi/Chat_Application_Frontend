@@ -14,17 +14,14 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserGroups from './UserGroup';
 
-
 function SideBar() {
 
 const {myChats}=useSelector((state)=>state.chat);
 const token=JSON.parse(localStorage.getItem('token'));
-const searchUsers=useSelector((state)=>state.chat.searchUsers)
+const searchUsers=useSelector((state)=>state?.chat?.searchUsers)
 const navigate=useNavigate();
 const [user,setUser]=useState(null);
 const [groupUser,setGroupUser]=useState({name:'',userName:''});
-// const [suggestion,setSuggestion]=useState([]);
-// const [selected,setSelected]=useState([]);
 const dispatch=useDispatch();
 const [open, setOpen] = useState(false)
 
@@ -51,7 +48,9 @@ const [open, setOpen] = useState(false)
       const data=await createChat(userId,token);
       console.log(data)
        if(data.status==200){
-        navigate(`chat/${data.data?._id}`)
+         // Update myChats state to include the newly created chat
+      dispatch(setMyChats([...myChats, data.data]));
+        navigate(`chat/${data?.data?._id}`)
        }
     } catch (error) {
       console.log(error)
@@ -101,7 +100,7 @@ useEffect(()=>{
   const fetchData=async()=>{
     try {
       
-      const data=await searchUserApi(groupUser.userName,token);
+      const data=await searchUserApi(groupUser?.userName,token);
       console.log(data.data);
       console.log("searching")
         setSuggestion([...data.data])
@@ -157,8 +156,8 @@ const logout=()=>{
     </div>
     <div>    <ul className='suggestion-list'>
     
-       {searchUsers.length>0 && searchUsers?.map((ele)=> (
-         <li key={ele._id}  onClick={()=>handleCreation(ele._id)}>{ele.name}</li>
+       {searchUsers?.length>0 && searchUsers?.map((ele)=> (
+         <li key={ele?._id}  onClick={()=>handleCreation(ele?._id)}>{ele?.name}</li>
        ))}
      </ul>
      </div>
@@ -170,7 +169,6 @@ const logout=()=>{
     })}
    </div>
     <UserGroups/>
-    {/* <SearchUser/> */}
    </div>
    )
  }

@@ -39,7 +39,7 @@ export default function Forget() {
     event.preventDefault(); 
     try {
       const response = await ForgetPassword(user);
-      event.target.reset();
+      console.log(response);
 
      } catch (error) {
       console.log(error);

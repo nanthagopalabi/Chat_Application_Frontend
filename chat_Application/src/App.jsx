@@ -7,6 +7,7 @@ import MainContainer from './Components/MainContainer';
 import Welcome from './All_Pages/Welcome';
 import { useSelector } from 'react-redux';
 import ChatArea from './Components/ChatArea';
+import Reset from './All_Pages/ResetPage';
 
 function App() {
   const token=useSelector((state)=>state.chat.user.token);
@@ -26,7 +27,7 @@ function App() {
 
       <Route path='/register' element={<Register/>}/>
       <Route path='/forget' element={<Forget/>}/>
-      <Route path='/reset/:resetToken' element={<Forget/>} />
+      <Route path='/reset/:resetToken' element={<Reset/>} />
       <Route/>
      
     </Routes>

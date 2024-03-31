@@ -8,8 +8,8 @@ import SideBar from './SideBar'
 function MainContainer() {
 
   const dispatch = useDispatch();
-  const isSmallScreen = useSelector(state => state.chat.isSmallScreen);
-  const showChatArea = useSelector(state => state.chat.showChatArea);
+  const isSmallScreen = useSelector(state => state?.chat?.isSmallScreen);
+  const showChatArea = useSelector(state => state?.chat?.showChatArea);
 
 
   useEffect(() => {
@@ -23,7 +23,6 @@ function MainContainer() {
       window.removeEventListener('resize', handleResize);
     };
   }, [dispatch]);
-
    
   return (
     <div className='main-container'>

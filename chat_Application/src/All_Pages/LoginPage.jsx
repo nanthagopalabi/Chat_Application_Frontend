@@ -128,6 +128,9 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
+              <strong>Demo Credentials:</strong>
+              <div><strong>Email:</strong>demo@gmail.com</div>
+              <div><strong>Password:</strong>12345678</div>
       </Container>
     </ThemeProvider>
     </Container>

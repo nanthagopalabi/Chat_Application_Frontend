@@ -30,7 +30,7 @@ function ChatArea() {
   const token=JSON.parse(localStorage.getItem('token'));
   const id=JSON.parse(localStorage.getItem('user'));
   const messagesEndRef = useRef(null);
-  const [isTyping, setIsTyping] = useState(false);     
+  const [isTyping, setIsTyping] = useState(false);    
 
   const {chatId}=useParams();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -43,8 +43,16 @@ function ChatArea() {
     setAnchorEl(null);
   };
 
-  const handleEmojiSelect = (emoji) => {
-    dispatch(updateMessageContent((prevContent) => prevContent + emoji));
+  const handleEmojiSelect = (emojiUrl) => {
+    const newContent = message?.content + emojiUrl;
+    dispatch(updateMessageContent(newContent));
+  };  
+
+   // Function to extract emoji URL from message content
+   const getEmojiUrl = (content) => {
+    const regex = /(https?:\/\/[^\s]+\.png)/; // Regular expression to match PNG image URLs
+    const match = content.match(regex);
+    return match ? match[0] : null;
   };
  
   const dummy={
@@ -146,26 +154,22 @@ const handleSend=async()=>{
 
   const handleAddUser=()=>{
     dispatch(setAddUsertoGroup());
-    handleClose();
-  }
+    handleClose();}
 
   const handleRemoveUser=()=>{
     dispatch(toggleRemoveUser());
-    handleClose();
-  }
+    handleClose();}
   
   const handleGroupNameChange=()=>{
     dispatch(toggleGroupName());
-    handleClose();
-  }
+    handleClose();}
 
   const handleTyping=(e)=>{
     if(e.key === "Event"){
       handleSend();
       return
     }
-    dispatch(updateMessageContent((e.target.value)));
-  };
+    dispatch(updateMessageContent((e.target.value)));};
 
   const formatDate = (date) => {
     try {
@@ -208,31 +212,26 @@ const handleSend=async()=>{
     <div className='chatarea-container'>
         <div className='chatheader-container'>
 
-        {showChatArea&&<IconButton onClick={()=>dispatch(setShowChatArea(false))}>
-            <KeyboardBackspaceIcon/>
-          </IconButton>}
-        
           <div className='con-icon'>
           {selectedChat?.isGroupChat ? (
-            // Render a different icon for group chats
+            // Render icon for group chats
             <div className="group-icon"><GroupsIcon/></div>
           ) : (
-            // Render the initial letter of the chat name for non-group chats
-            selectedChat?.chatName && (
-              <div className="chat-initial">{selectedChat?.users[0]?.name.charAt(0)}</div>
+            // // Render the initial letter of the chat name for non-group chats
+            selectedChat && selectedChat?.users && selectedChat?.users?.length > 0 &&(
+              <div className="chat-initial">{selectedChat?.users[0]?.name?.charAt(0)}</div>
             )
           )}
         </div>
-                
+            
           <span className='header-text'>
             <h5 className='con-title '>{selectedChat && selectedChat?.chatName !== 'sender' ?
-            (selectedChat?.chatName):
+            selectedChat?.chatName :
             (selectedChat && selectedChat.users?.length > 0 && selectedChat?.users[0]?.name)}</h5>
-            {/* <p className='con-timeStamp'>{isTyping?("typing"):(dummy.timeStamp)}</p> */}
           </span>
-          <IconButton onClick={handleClick}>
+          {<IconButton onClick={()=>dispatch(setShowChatArea(false))}>
             <MoreHorizIcon/>
-          </IconButton>
+          </IconButton>}
  
           {selectedChat?.chatName!=='sender'&&
           <Menu  anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} >
@@ -275,7 +274,11 @@ const handleSend=async()=>{
             if (e.key === "Enter") {
       handleSend();}
     }} />
-         <Emoji/>
+          {getEmojiUrl(message.content) && (
+          <img src={getEmojiUrl(message.content)} alt="Emoji" className="emoji-image" />
+        )}
+       
+        <Emoji  onEmojiSelect={handleEmojiSelect} />
         <IconButton onClick={()=>handleSend()}>
           <SendIcon/>
         </IconButton>
