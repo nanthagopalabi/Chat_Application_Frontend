@@ -88,6 +88,7 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
               onChange={(e)=>setUser({...user,[e.target.name]:e.target.value})}/>
+              <Typography>Demo Email: demo@gmail.com</Typography>
 
             <TextField
               margin="normal"
@@ -99,6 +100,7 @@ export default function SignIn() {
               id="password"
               autoComplete="password"
               onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}/>
+              <Typography>Demo Password: 12345678</Typography>
 
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -121,11 +123,6 @@ export default function SignIn() {
               </Grid>
             </Grid>
           </Box>
-        </Box>
-        <Box>
-          <Typography variant="h6">Demo Credentials:</Typography>
-          <Typography><strong>Email:</strong> demo@gmail.com</Typography>
-          <Typography><strong>Password:</strong> 12345678</Typography>
         </Box>
       </Container>
     </ThemeProvider>
