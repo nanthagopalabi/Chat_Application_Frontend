@@ -123,9 +123,9 @@ export default function SignIn() {
           </Box>
         </Box>
         <Box>
-        <strong>Demo Credentials:</strong>
-        <div><strong>Email:</strong> demo@gmail.com</div>
-        <div><strong>Password:</strong> 12345678</div>
+          <Typography variant="h6">Demo Credentials:</Typography>
+          <Typography><strong>Email:</strong> demo@gmail.com</Typography>
+          <Typography><strong>Password:</strong> 12345678</Typography>
         </Box>
       </Container>
     </ThemeProvider>
