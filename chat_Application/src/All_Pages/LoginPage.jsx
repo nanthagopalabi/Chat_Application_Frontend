@@ -29,9 +29,8 @@ const defaultTheme = createTheme({
 });
 
 export default function SignIn() {
-
   const navigate=useNavigate();
- const dispatch=useDispatch();
+  const dispatch=useDispatch();
   const [user,setUser]=useState({
     email:"",
     password:"" 
@@ -70,8 +69,7 @@ export default function SignIn() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-          }}
-        >
+          }}>
 
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
@@ -89,8 +87,8 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={(e)=>setUser({...user,[e.target.name]:e.target.value})}
-            />
+              onChange={(e)=>setUser({...user,[e.target.name]:e.target.value})}/>
+
             <TextField
               margin="normal"
               required
@@ -100,26 +98,22 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="password"
-              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
-            />
+              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}/>
+
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+              label="Remember me"/>
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Log In
-            </Button>
+              sx={{ mt: 3, mb: 2 }}>Log In</Button>
+
             <Grid container>
               <Grid item xs>
-                <Link href="/forget" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+                <Link href="/forget" variant="body2">Forgot password?</Link>
+            </Grid>
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Click Register"}
@@ -128,9 +122,11 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-              <strong>Demo Credentials:</strong>
-              <div><strong>Email:</strong>demo@gmail.com</div>
-              <div><strong>Password:</strong>12345678</div>
+        <Box>
+        <strong>Demo Credentials:</strong>
+        <div><strong>Email:</strong> demo@gmail.com</div>
+        <div><strong>Password:</strong> 12345678</div>
+        </Box>
       </Container>
     </ThemeProvider>
     </Container>
